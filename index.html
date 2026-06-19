@@ -976,7 +976,7 @@ function showMsg(id,txt,type){const e=document.getElementById(id);if(!e)return;e
 function clearMsg(id){const e=document.getElementById(id);if(!e)return;e.className='panel-msg';e.textContent='';}
 function toast(t,cls='',dur=4000){const el=Object.assign(document.createElement('div'),{className:`toast ${cls}`,textContent:t});document.getElementById('toasts').prepend(el);setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),240)},dur);}
 
-const LOCAL_ADMIN_PASSWORD='rpladmin11'; // local gate for this static bracket page
+const LOCAL_ADMIN_PASSWORD='RPLHRPASS$&'; // local gate for this static bracket page
 
 async function unlockAdmin(){
   const inp=document.getElementById('admin-pass'), btn=document.querySelector('.admin-lock-btn');
