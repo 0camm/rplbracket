@@ -1,8 +1,13 @@
 // Vercel Serverless Function: POST /api/verify-admin
 // Checks a submitted password against the ADMIN_PASSWORD environment variable.
-// Set ADMIN_PASSWORD in your Vercel project: Settings -> Environment Variables.
+// Set ADMIN_PASSWORD (and optionally SESSION_SECRET) in your Vercel project:
+// Settings -> Environment Variables.
 // Never expose the real password in client-side code — this endpoint is the
-// only place it's compared.
+// only place it's compared. On success it issues a short-lived signed
+// session token; the client uses that token (not the password) to
+// authorize subsequent admin writes.
+
+import { generateToken } from './_lib/auth.js';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
@@ -23,7 +28,8 @@ export default function handler(req, res) {
   const password = body && body.password;
 
   if (typeof password === 'string' && password === expected) {
-    return res.status(200).json({ ok: true });
+    const { token, expiresAt } = generateToken();
+    return res.status(200).json({ ok: true, token, expiresAt });
   }
 
   return res.status(401).json({ ok: false, error: 'Wrong password.' });

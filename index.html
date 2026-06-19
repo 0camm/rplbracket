@@ -223,15 +223,19 @@ body{
 .admin-panel{position:fixed;z-index:201;background:var(--s1);display:flex;flex-direction:column;bottom:0;left:0;right:0;border-radius:20px 20px 0 0;border:1px solid var(--b);border-bottom:none;max-height:92dvh;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,1,.56,1)}
 .admin-panel.open{transform:translateY(0)}
 @media(min-width:680px){
-  .admin-panel{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-46%) scale(.97);border-radius:16px;border-bottom:1px solid var(--b);width:620px;max-width:calc(100vw - 40px);max-height:88dvh;opacity:0;transition:transform .25s cubic-bezier(.32,1,.56,1),opacity .2s}
+  .admin-panel{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-46%) scale(.97);border-radius:16px;border-bottom:1px solid var(--b);width:640px;max-width:calc(100vw - 40px);max-height:88dvh;opacity:0;transition:transform .25s cubic-bezier(.32,1,.56,1),opacity .2s}
   .admin-panel.open{transform:translate(-50%,-50%) scale(1);opacity:1}
 }
 .admin-handle{width:36px;height:4px;border-radius:2px;background:var(--mu2);margin:12px auto 0;flex-shrink:0}
 @media(min-width:680px){.admin-handle{display:none}}
-.admin-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--b);flex-shrink:0}
-.admin-header-left{display:flex;flex-direction:column;gap:2px}
+.admin-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--b);flex-shrink:0;gap:10px}
+.admin-header-left{display:flex;flex-direction:column;gap:2px;min-width:0}
 .admin-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;color:#fff;line-height:1}
 .admin-sub{font-size:11px;color:var(--mu)}
+.admin-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.admin-undo-btn{background:var(--am-d);border:1px solid rgba(245,166,35,.3);border-radius:8px;padding:0 12px;height:32px;color:var(--am);font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.admin-undo-btn:hover{background:rgba(245,166,35,.18)}
+.admin-undo-btn:disabled{opacity:.35;cursor:not-allowed}
 .admin-close{width:32px;height:32px;border-radius:8px;background:var(--s2);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;color:var(--mu);cursor:pointer;transition:background .15s,color .15s;flex-shrink:0}
 .admin-close:hover{background:var(--s3);color:var(--tx)}
 .admin-lock{padding:24px 20px;flex-shrink:0}
@@ -254,6 +258,7 @@ body{
 .admin-section-icon.blue{background:var(--bl-d);color:var(--bl)}
 .admin-section-icon.gold{background:var(--gold-d);color:var(--gold)}
 .admin-section-icon.red{background:var(--red-dim);color:var(--red)}
+.admin-section-icon.green{background:var(--gr-d);color:var(--gr)}
 .admin-section-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tx)}
 .admin-section-desc{font-size:10px;color:var(--mu);margin-top:1px}
 .admin-section-body{padding:12px 14px}
@@ -270,6 +275,9 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 .gold-btn{width:100%;background:var(--gold-d);border:1px solid var(--gold-mid);border-radius:7px;padding:10px;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .15s;min-height:42px;margin-top:4px}
 .gold-btn:hover{background:rgba(245,196,0,.16)}
 .gold-btn:disabled{opacity:.5;cursor:not-allowed}
+.green-btn{width:100%;background:var(--gr-d);border:1px solid rgba(24,212,100,.3);border-radius:7px;padding:10px;color:var(--gr);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .15s;min-height:42px;margin-top:4px}
+.green-btn:hover{background:rgba(24,212,100,.16)}
+.green-btn:disabled{opacity:.5;cursor:not-allowed}
 .danger-btn{width:100%;background:var(--red-dim);border:1px solid var(--red-mid);border-radius:7px;padding:10px 16px;color:var(--red);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:background .15s,border-color .15s;min-height:42px}
 .danger-btn:hover{background:rgba(232,0,29,.15);border-color:rgba(232,0,29,.4)}
 .danger-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -284,6 +292,16 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 .mp-name{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.04em}
 .mp-meta{font-size:9px;color:var(--mu)}
 .mp-tag{font-size:8px;font-weight:700;letter-spacing:.1em;padding:1px 5px;border-radius:3px;background:var(--s3);color:var(--mu);flex-shrink:0;white-space:nowrap}
+.series-ctrl{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.series-ctrl-team{flex:1;min-width:0}
+.series-ctrl-name{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.04em;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.series-ctrl-score{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#fff;text-align:center;min-width:24px}
+.series-ctrl-btns{display:flex;gap:4px}
+.sc-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--b);background:var(--s3);color:var(--tx2);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.sc-btn:hover{border-color:var(--red-edge);color:#fff}
+.sc-btn.plus{color:var(--gr);border-color:rgba(24,212,100,.2)}
+.sc-btn.plus:hover{background:var(--gr-d);border-color:rgba(24,212,100,.4)}
+.series-need{font-size:9px;color:var(--mu);text-align:center;margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
 
 /* ── TOASTS ── */
 #toasts{position:fixed;bottom:20px;right:16px;display:flex;flex-direction:column-reverse;gap:7px;z-index:9999;pointer-events:none;width:min(300px,calc(100vw - 32px))}
@@ -402,9 +420,12 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
       <div class="admin-title">Bracket Admin</div>
       <div class="admin-sub" id="admin-sub-text">Enter password to unlock</div>
     </div>
-    <button class="admin-close" onclick="closeAdmin()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-    </button>
+    <div class="admin-header-right">
+      <button class="admin-undo-btn hidden" id="global-undo-btn" title="Undo the last change made this session">⟲ Undo</button>
+      <button class="admin-close" onclick="closeAdmin()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
   </div>
 
   <div id="admin-lock-screen" class="admin-lock">
@@ -418,7 +439,7 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 
   <div id="admin-unlocked" class="hidden" style="display:none;flex-direction:column;flex:1;min-height:0;">
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchAdminTab('edit',this)">Edit</button>
+      <button class="admin-tab active" onclick="switchAdminTab('edit',this)">Matchup</button>
       <button class="admin-tab" onclick="switchAdminTab('champ',this)">Champion</button>
       <button class="admin-tab" onclick="switchAdminTab('season',this)">Season</button>
     </div>
@@ -428,34 +449,75 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
       <div class="admin-section">
         <div class="admin-section-hd">
           <div class="admin-section-icon blue">✎</div>
-          <div><div class="admin-section-label">Edit Matchup</div><div class="admin-section-desc">Select a matchup, then update teams, scores, status.</div></div>
+          <div><div class="admin-section-label">Select Matchup</div><div class="admin-section-desc">Pick a matchup to set teams, scores, and advance the winner.</div></div>
         </div>
         <div class="admin-section-body">
           <input class="field-input" type="text" id="mp-search" placeholder="Search matchup or team…" autocomplete="off" spellcheck="false" style="margin-bottom:8px">
           <div class="mp-list" id="mp-list"></div>
-          <div id="edit-form" class="hidden">
-            <div style="margin-bottom:7px;"><span class="flbl">Editing: </span><span id="edit-lbl" style="font-size:12px;color:var(--tx)"></span></div>
+        </div>
+      </div>
+
+      <div id="edit-form" class="hidden">
+        <div class="admin-section">
+          <div class="admin-section-hd">
+            <div class="admin-section-icon blue">⚙</div>
+            <div><div class="admin-section-label" id="edit-lbl">Editing</div><div class="admin-section-desc">Teams &amp; seeds</div></div>
+          </div>
+          <div class="admin-section-body">
             <div class="fgrid">
-              <div><div class="flbl">Top ABB</div><input class="field-input" id="e-ta" placeholder="NYK" maxlength="8" style="text-transform:uppercase"></div>
-              <div><div class="flbl">Top Score</div><input class="field-input" id="e-ts" type="number" min="0" placeholder="0" style="text-align:center"></div>
-              <div><div class="flbl">Bot ABB</div><input class="field-input" id="e-ba" placeholder="BOS" maxlength="8" style="text-transform:uppercase"></div>
-              <div><div class="flbl">Bot Score</div><input class="field-input" id="e-bs" type="number" min="0" placeholder="0" style="text-align:center"></div>
+              <div><div class="flbl">Top Team (ABB)</div><input class="field-input" id="e-ta" placeholder="NYK" maxlength="8" style="text-transform:uppercase"></div>
+              <div><div class="flbl">Top Seed</div><input class="field-input" id="e-tseed" type="number" min="1" max="10" placeholder="#" style="text-align:center"></div>
+              <div><div class="flbl">Bot Team (ABB)</div><input class="field-input" id="e-ba" placeholder="BOS" maxlength="8" style="text-transform:uppercase"></div>
+              <div><div class="flbl">Bot Seed</div><input class="field-input" id="e-bseed" type="number" min="1" max="10" placeholder="#" style="text-align:center"></div>
             </div>
-            <div class="frow">
-              <div style="flex:1"><div class="flbl">Top Seed</div><input class="field-input" id="e-tseed" type="number" min="1" max="10" placeholder="#" style="text-align:center"></div>
-              <div style="flex:1"><div class="flbl">Bot Seed</div><input class="field-input" id="e-bseed" type="number" min="1" max="10" placeholder="#" style="text-align:center"></div>
-              <div style="flex:2"><div class="flbl">Status</div>
-                <select class="field-input" id="e-status">
-                  <option value="">Not started</option>
-                  <option value="live">Live</option>
-                  <option value="done">Done</option>
-                </select>
+            <button class="action-btn" id="save-teams-btn">Save Teams &amp; Seeds</button>
+            <div class="panel-msg" id="edit-msg"></div>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-section-hd">
+            <div class="admin-section-icon green">🏐</div>
+            <div><div class="admin-section-label">Series Score</div><div class="admin-section-desc" id="series-desc">Set the format, then tap + to record game wins. Winner &amp; status update automatically.</div></div>
+          </div>
+          <div class="admin-section-body">
+            <div class="flbl">Series Format</div>
+            <select class="field-input" id="e-format" style="margin-bottom:8px">
+              <option value="1">Best of 1</option>
+              <option value="3">Best of 3</option>
+              <option value="5">Best of 5</option>
+              <option value="7" selected>Best of 7</option>
+            </select>
+            <div class="series-need" id="series-need-lbl">First to 4 wins</div>
+            <div class="series-ctrl">
+              <div class="series-ctrl-team"><div class="series-ctrl-name" id="sc-top-name">Top</div></div>
+              <div class="series-ctrl-btns">
+                <button class="sc-btn" id="sc-top-minus">−</button>
+                <div class="series-ctrl-score" id="sc-top-score">0</div>
+                <button class="sc-btn plus" id="sc-top-plus">+</button>
               </div>
             </div>
-            <div style="margin-bottom:6px"><div class="flbl">Series Text</div><input class="field-input" id="e-series" placeholder="NYK leads 3-1"></div>
-            <div><div class="flbl">Winner ABB</div><input class="field-input" id="e-winner" placeholder="leave blank if TBD" maxlength="8" style="text-transform:uppercase"></div>
-            <button class="action-btn" id="save-btn">Save Matchup</button>
-            <div class="panel-msg" id="edit-msg"></div>
+            <div class="series-ctrl">
+              <div class="series-ctrl-team"><div class="series-ctrl-name" id="sc-bot-name">Bottom</div></div>
+              <div class="series-ctrl-btns">
+                <button class="sc-btn" id="sc-bot-minus">−</button>
+                <div class="series-ctrl-score" id="sc-bot-score">0</div>
+                <button class="sc-btn plus" id="sc-bot-plus">+</button>
+              </div>
+            </div>
+            <div style="margin-bottom:6px"><div class="flbl">Series Status Text</div><input class="field-input" id="e-series" placeholder="Auto-generated, or override"></div>
+            <div class="panel-msg" id="series-msg"></div>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-section-hd">
+            <div class="admin-section-icon gold">➜</div>
+            <div><div class="admin-section-label">Advance Winner</div><div class="admin-section-desc" id="advance-desc">Push the series winner into the next round automatically.</div></div>
+          </div>
+          <div class="admin-section-body">
+            <button class="gold-btn" id="advance-btn" disabled>Advance Winner →</button>
+            <div class="panel-msg" id="advance-msg"></div>
           </div>
         </div>
       </div>
@@ -466,7 +528,7 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
       <div class="admin-section">
         <div class="admin-section-hd">
           <div class="admin-section-icon gold">🏆</div>
-          <div><div class="admin-section-label">Set Champion</div><div class="admin-section-desc">Crown the current season champion.</div></div>
+          <div><div class="admin-section-label">Set Champion</div><div class="admin-section-desc">Usually set automatically when you advance the Finals winner — use this only to override.</div></div>
         </div>
         <div class="admin-section-body">
           <div class="frow">
@@ -510,26 +572,49 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 
 <script>
 // ═══════════════════════════════════════════════════
-// REDIS
+// DATA LAYER — talks only to our own /api/* serverless functions.
+// No database credentials or admin secrets ever live in this file;
+// they're stored server-side as Vercel Environment Variables.
 // ═══════════════════════════════════════════════════
-const RU='https://faithful-haddock-151326.upstash.io';
-const RT='gQAAAAAAAk8eAAIgcDIzNjk4NjQ2MWE4YmU0YWQ5YTBiZDFkYjUzMmFlNmUxNQ';
-const RK_BRACKET='rpl-bracket-s11';
-const RK_ARCHIVE='rpl-bracket-archive';
-const RK_META='rpl-bracket-meta';
-const ADMIN_PASSWORD_HASH_ENDPOINT=null; // bracket admin uses local password check matching existing deployment
+let adminToken=null; // short-lived session token issued by /api/verify-admin, kept in memory + sessionStorage
 
-async function rGet(key){try{const r=await fetch(`${RU}/get/${key}`,{headers:{Authorization:`Bearer ${RT}`}});const j=await r.json();return j.result?JSON.parse(j.result):null;}catch{return null;}}
-async function rSet(key,d){
+function getStoredToken(){
   try{
-    const r=await fetch(`${RU}/set/${key}/${encodeURIComponent(JSON.stringify(d))}`,{
-      headers:{Authorization:`Bearer ${RT}`}
-    });
-    const j=await r.json();
-    return j.result==='OK';
-  }catch{return false;}
+    const raw=sessionStorage.getItem('rpl_admin_session');
+    if(!raw)return null;
+    const j=JSON.parse(raw);
+    if(j&&j.token&&j.expiresAt&&Date.now()<j.expiresAt)return j.token;
+  }catch{}
+  return null;
 }
-  
+function storeToken(token,expiresAt){
+  adminToken=token;
+  try{sessionStorage.setItem('rpl_admin_session',JSON.stringify({token,expiresAt}));}catch{}
+}
+function clearToken(){
+  adminToken=null;
+  try{sessionStorage.removeItem('rpl_admin_session');}catch{}
+}
+
+async function apiGet(path){
+  const r=await fetch(path);
+  const j=await r.json();
+  if(!j.ok)throw new Error(j.error||'Request failed');
+  return j.data;
+}
+async function apiPost(path,body){
+  if(!adminToken)throw new Error('Not authorized — please unlock the admin panel.');
+  const r=await fetch(path,{
+    method:'POST',
+    headers:{'Content-Type':'application/json',Authorization:`Bearer ${adminToken}`},
+    body:JSON.stringify(body)
+  });
+  const j=await r.json();
+  if(r.status===401){adminOk=false;clearToken();lockAdminUI();throw new Error('Your admin session expired. Please unlock again.');}
+  if(!j.ok)throw new Error(j.error||'Request failed');
+  return j;
+}
+
 // ═══════════════════════════════════════════════════
 // LOGOS
 // ═══════════════════════════════════════════════════
@@ -539,7 +624,7 @@ const logoUrl=a=>{const k=ESPN_MAP[(a||'').toUpperCase()];return k?`https://a.es
 // ═══════════════════════════════════════════════════
 // DATA MODEL
 // ═══════════════════════════════════════════════════
-const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:''});
+const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:'',format:7});
 function buildDefault(seasonNum){
   const m=[];let id=0;
   ['east','west'].forEach(c=>{
@@ -555,23 +640,49 @@ function buildDefault(seasonNum){
 }
 
 let BD=null, selId=null, adminOk=false, ARCHIVE=null;
+let UNDO_STACK=[]; // in-memory only (per browser session) — snapshots of BD before each admin write
 const gM=id=>BD.matchups.find(m=>m.id===id);
 const gPI=(c,t)=>BD.matchups.find(m=>m.conf===c&&m.type===t);
 const gR=(c,r)=>BD.matchups.filter(m=>m.conf===c&&m.type==='main'&&m.pos>=r*10&&m.pos<r*10+10).sort((a,b)=>a.pos-b.pos);
 const gF=()=>BD.matchups.find(m=>m.type==='finals');
 
-async function save(){await rSet(RK_BRACKET,BD);setStatus('ok');}
+function pushUndo(){
+  UNDO_STACK.push(JSON.parse(JSON.stringify(BD)));
+  if(UNDO_STACK.length>20)UNDO_STACK.shift();
+  refreshUndoBtn();
+}
+function refreshUndoBtn(){
+  const b=document.getElementById('global-undo-btn');
+  if(!b)return;
+  b.classList.toggle('hidden',!adminOk);
+  b.disabled=UNDO_STACK.length===0;
+}
+async function undoLast(){
+  if(!UNDO_STACK.length){toast('Nothing to undo.','amber',2500);return;}
+  const prev=UNDO_STACK.pop();
+  BD=prev;
+  try{await save();}catch(e){toast('Undo failed to sync: '+e.message,'',4000);}
+  render();
+  if(adminOk)buildPicker(document.getElementById('mp-search')?.value||'');
+  if(selId!==null&&gM(selId))fillForm(selId);
+  refreshUndoBtn();
+  toast('Reverted last change.','amber',3000);
+}
+
+async function save(){await apiPost('/api/bracket',BD);setStatus('ok');}
 async function load(){
   setLoad(true);
-  const d=await rGet(RK_BRACKET);
+  let d=null;
+  try{d=await apiGet('/api/bracket');}catch(e){setStatus('err');}
   BD=d&&d.matchups?d:buildDefault(11);
   if(!BD.season)BD.season=11;
-  if(!d||!d.matchups)await rSet(RK_BRACKET,BD);
+  BD.matchups.forEach(m=>{if(!m.format)m.format=7;});
+  if(!d||!d.matchups){try{await apiPost('/api/bracket',BD);}catch{}}
   setLoad(false);setStatus('ok');
 }
 async function loadArchive(){
-  const d=await rGet(RK_ARCHIVE);
-  ARCHIVE=Array.isArray(d)?d:[];
+  try{const d=await apiGet('/api/archive');ARCHIVE=Array.isArray(d)?d:[];}
+  catch(e){ARCHIVE=ARCHIVE||[];}
 }
 function setStatus(s){
   const dot=document.getElementById('live-chip');
@@ -867,14 +978,6 @@ function render(){renderDesktop();renderMobile();refreshHero();}
 // ═══════════════════════════════════════════════════
 // ARCHIVE
 // ═══════════════════════════════════════════════════
-function archiveSummaryRounds(snapshot){
-  // builds round blocks (PI, R1, R2, CF) per conf + finals for the modal
-  const out=[];
-  ['east','west'].forEach(conf=>{
-    // not used directly; archive modal builds its own structure from matchups
-  });
-  return out;
-}
 function renderArchiveGrid(){
   const grid=document.getElementById('archive-grid');
   const ct=document.getElementById('arc-ct');
@@ -917,7 +1020,6 @@ function openArchiveModal(s){
   document.getElementById('am-title').textContent=`Season ${s.season}`;
   document.getElementById('am-sub').textContent='Archived playoff bracket';
   const u=s.champion?logoUrl(s.champion):null;
-  const gM2=id=>(s.matchups||[]).find(m=>m.id===id);
   const gPI2=(c,t)=>(s.matchups||[]).find(m=>m.conf===c&&m.type===t);
   const gR2=(c,r)=>(s.matchups||[]).filter(m=>m.conf===c&&m.type==='main'&&m.pos>=r*10&&m.pos<r*10+10).sort((a,b)=>a.pos-b.pos);
   const finals=(s.matchups||[]).find(m=>m.type==='finals');
@@ -928,19 +1030,16 @@ function openArchiveModal(s){
       <div><div class="achamp-text-lbl">RPL Champion</div><div class="achamp-text-name">${s.champion}</div>${s.championSeries?`<div class="achamp-text-series">Finals: ${s.championSeries}</div>`:''}</div>
     </div>`:'';
 
-  const piBlock=conf=>{
-    const rows=[gPI2(conf,'pi-a'),gPI2(conf,'pi-b'),gPI2(conf,'pi-c')].filter(Boolean).map(m=>archiveMatchRow(m,conf)).join('');
-    return rows;
-  };
-  const roundBlock=(label,conf,r)=>gR2(conf,r).map(m=>archiveMatchRow(m,conf)).join('');
+  const piBlock=conf=>[gPI2(conf,'pi-a'),gPI2(conf,'pi-b'),gPI2(conf,'pi-c')].filter(Boolean).map(m=>archiveMatchRow(m,conf)).join('');
+  const roundBlock=(conf,r)=>gR2(conf,r).map(m=>archiveMatchRow(m,conf)).join('');
 
   const body=`
     ${champBanner}
     <div class="arounds">
       <div class="around-block"><div class="around-hd">Play-In</div>${piBlock('west')}${piBlock('east')}</div>
-      <div class="around-block"><div class="around-hd">First Round</div>${roundBlock('R1','west',0)}${roundBlock('R1','east',0)}</div>
-      <div class="around-block"><div class="around-hd">Conference Semifinals</div>${roundBlock('R2','west',1)}${roundBlock('R2','east',1)}</div>
-      <div class="around-block"><div class="around-hd">Conference Finals</div>${roundBlock('CF','west',2)}${roundBlock('CF','east',2)}</div>
+      <div class="around-block"><div class="around-hd">First Round</div>${roundBlock('west',0)}${roundBlock('east',0)}</div>
+      <div class="around-block"><div class="around-hd">Conference Semifinals</div>${roundBlock('west',1)}${roundBlock('east',1)}</div>
+      <div class="around-block"><div class="around-hd">Conference Finals</div>${roundBlock('west',2)}${roundBlock('east',2)}</div>
       ${finals?`<div class="around-block"><div class="around-hd">Finals</div>${archiveMatchRow(finals,'finals')}</div>`:''}
     </div>`;
   document.getElementById('am-body').innerHTML=body;
@@ -965,7 +1064,7 @@ document.querySelectorAll('.view-tab').forEach(tab=>{
 });
 
 // ═══════════════════════════════════════════════════
-// ADMIN
+// ADMIN — UNLOCK / LOCK
 // ═══════════════════════════════════════════════════
 document.getElementById('admin-btn-top').addEventListener('click',openAdmin);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAdmin();});
@@ -976,25 +1075,38 @@ function showMsg(id,txt,type){const e=document.getElementById(id);if(!e)return;e
 function clearMsg(id){const e=document.getElementById(id);if(!e)return;e.className='panel-msg';e.textContent='';}
 function toast(t,cls='',dur=4000){const el=Object.assign(document.createElement('div'),{className:`toast ${cls}`,textContent:t});document.getElementById('toasts').prepend(el);setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),240)},dur);}
 
-const LOCAL_ADMIN_PASSWORD='RPLHRPASS$&'; // local gate for this static bracket page
+function lockAdminUI(){
+  document.getElementById('admin-lock-screen').classList.remove('hidden');
+  const ul=document.getElementById('admin-unlocked');ul.classList.add('hidden');ul.style.display='none';
+  document.getElementById('admin-sub-text').textContent='Enter password to unlock';
+  refreshUndoBtn();
+}
 
 async function unlockAdmin(){
   const inp=document.getElementById('admin-pass'), btn=document.querySelector('.admin-lock-btn');
   if(!inp.value){showMsg('lock-msg','Enter password.','error');return;}
   btn.disabled=true;btn.textContent='…';clearMsg('lock-msg');
-  await new Promise(r=>setTimeout(r,250));
-  if(inp.value===LOCAL_ADMIN_PASSWORD){
-    adminOk=true;
-    document.getElementById('admin-lock-screen').classList.add('hidden');
-    const ul=document.getElementById('admin-unlocked');ul.classList.remove('hidden');ul.style.display='flex';
-    document.getElementById('admin-sub-text').textContent='Live changes sync to Redis.';
-    inp.value='';buildPicker();
-  }else{
-    inp.style.borderColor='rgba(232,0,29,.6)';
-    showMsg('lock-msg','Wrong password.','error');
+  try{
+    const r=await fetch('/api/verify-admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:inp.value})});
+    const j=await r.json();
+    if(j.ok&&j.token){
+      storeToken(j.token,j.expiresAt);
+      adminOk=true;
+      document.getElementById('admin-lock-screen').classList.add('hidden');
+      const ul=document.getElementById('admin-unlocked');ul.classList.remove('hidden');ul.style.display='flex';
+      document.getElementById('admin-sub-text').textContent='Live changes sync instantly.';
+      inp.value='';buildPicker();refreshUndoBtn();
+    }else{
+      inp.style.borderColor='rgba(232,0,29,.6)';
+      showMsg('lock-msg',j.error||'Wrong password.','error');
+    }
+  }catch(e){
+    showMsg('lock-msg','Could not reach the server. Try again.','error');
   }
   btn.disabled=false;btn.textContent='Unlock';
 }
+
+document.getElementById('global-undo-btn').addEventListener('click',undoLast);
 
 function switchAdminTab(tab,btn){
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
@@ -1002,6 +1114,9 @@ function switchAdminTab(tab,btn){
   ['edit','champ','season'].forEach(t=>document.getElementById(`atab-${t}`).classList.toggle('hidden',t!==tab));
 }
 
+// ═══════════════════════════════════════════════════
+// MATCHUP PICKER
+// ═══════════════════════════════════════════════════
 function mLabel(m){
   let r;
   if(m.type==='finals')r='Finals';
@@ -1026,53 +1141,192 @@ function buildPicker(filter){
 }
 document.getElementById('mp-search').addEventListener('input',e=>buildPicker(e.target.value));
 
+// ═══════════════════════════════════════════════════
+// EDIT FORM — teams/seeds, series score, advance
+// ═══════════════════════════════════════════════════
+function neededWins(fmt){return Math.ceil(parseInt(fmt||7,10)/2);}
+
+function refreshSeriesUI(m){
+  const fmt=parseInt(m.format||7,10);
+  document.getElementById('e-format').value=String(fmt);
+  document.getElementById('series-need-lbl').textContent=`First to ${neededWins(fmt)} wins`;
+  document.getElementById('sc-top-name').textContent=m.topTeam||'Top team';
+  document.getElementById('sc-bot-name').textContent=m.botTeam||'Bottom team';
+  document.getElementById('sc-top-score').textContent=m.topScore!==''&&m.topScore!==undefined?m.topScore:0;
+  document.getElementById('sc-bot-score').textContent=m.botScore!==''&&m.botScore!==undefined?m.botScore:0;
+  document.getElementById('e-series').value=m.seriesTxt||'';
+  const ready=!!(m.topTeam&&m.botTeam);
+  document.getElementById('sc-top-plus').disabled=!ready;
+  document.getElementById('sc-bot-plus').disabled=!ready;
+  const advBtn=document.getElementById('advance-btn');
+  advBtn.disabled=!m.winner;
+  advBtn.textContent=m.type==='finals'&&m.winner?`Crown ${m.winner} Champion 🏆`:m.winner?`Advance ${m.winner} →`:'Advance Winner →';
+}
+
+function updateSeriesAuto(m){
+  const ts=parseInt(m.topScore||0,10), bs=parseInt(m.botScore||0,10);
+  const need=neededWins(m.format);
+  if(m.topTeam&&m.botTeam){
+    if(ts>=need){m.winner=m.topTeam;m.status='done';m.seriesTxt=`${m.topTeam} wins ${ts}-${bs}`;}
+    else if(bs>=need){m.winner=m.botTeam;m.status='done';m.seriesTxt=`${m.botTeam} wins ${bs}-${ts}`;}
+    else if(ts>0||bs>0){
+      m.winner='';m.status='live';
+      m.seriesTxt=ts===bs?`Series tied ${ts}-${bs}`:`${ts>bs?m.topTeam:m.botTeam} leads ${Math.max(ts,bs)}-${Math.min(ts,bs)}`;
+    }else{m.winner='';m.status='';m.seriesTxt='';}
+  }
+}
+
 function fillForm(id){
   const m=gM(id);if(!m)return;
   document.getElementById('edit-form').classList.remove('hidden');
   const{r,t}=mLabel(m);
   document.getElementById('edit-lbl').textContent=`${t} (${r})`;
   document.getElementById('e-ta').value=m.topTeam||'';
-  document.getElementById('e-ts').value=m.topScore!==''?m.topScore:'';
   document.getElementById('e-tseed').value=m.topSeed||'';
   document.getElementById('e-ba').value=m.botTeam||'';
-  document.getElementById('e-bs').value=m.botScore!==''?m.botScore:'';
   document.getElementById('e-bseed').value=m.botSeed||'';
-  document.getElementById('e-status').value=m.status||'';
-  document.getElementById('e-series').value=m.seriesTxt||'';
-  document.getElementById('e-winner').value=m.winner||'';
-  clearMsg('edit-msg');
+  refreshSeriesUI(m);
+  clearMsg('edit-msg');clearMsg('series-msg');clearMsg('advance-msg');
 }
-['e-ta','e-ba','e-winner','c-abb'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',function(){this.value=this.value.toUpperCase();});});
+['e-ta','e-ba','c-abb'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',function(){this.value=this.value.toUpperCase();});});
 
-document.getElementById('save-btn').addEventListener('click',async()=>{
-  if(selId===null){showMsg('edit-msg','Select a matchup.','error');return;}
+document.getElementById('save-teams-btn').addEventListener('click',async()=>{
+  if(selId===null){showMsg('edit-msg','Select a matchup first.','error');return;}
   const m=gM(selId);if(!m)return;
+  pushUndo();
   m.topTeam=document.getElementById('e-ta').value.trim().toUpperCase();
-  m.topScore=document.getElementById('e-ts').value;
   m.topSeed=document.getElementById('e-tseed').value;
   m.botTeam=document.getElementById('e-ba').value.trim().toUpperCase();
-  m.botScore=document.getElementById('e-bs').value;
   m.botSeed=document.getElementById('e-bseed').value;
-  m.winner=document.getElementById('e-winner').value.trim().toUpperCase();
-  m.status=document.getElementById('e-status').value;
-  m.seriesTxt=document.getElementById('e-series').value.trim();
-  await save();render();buildPicker(document.getElementById('mp-search').value);
-  showMsg('edit-msg','✓ Saved!','success');toast(`Updated: ${mLabel(m).t}`,'g',3000);
+  try{
+    await save();render();buildPicker(document.getElementById('mp-search').value);
+    refreshSeriesUI(m);
+    showMsg('edit-msg','✓ Saved!','success');toast(`Updated: ${mLabel(m).t}`,'g',3000);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('edit-msg','Save failed: '+e.message,'error');
+  }
 });
 
+document.getElementById('e-format').addEventListener('change',async()=>{
+  if(selId===null)return;
+  const m=gM(selId);if(!m)return;
+  pushUndo();
+  m.format=parseInt(document.getElementById('e-format').value,10);
+  updateSeriesAuto(m);
+  try{await save();render();refreshSeriesUI(m);buildPicker(document.getElementById('mp-search').value);}
+  catch(e){UNDO_STACK.pop();refreshUndoBtn();showMsg('series-msg','Save failed: '+e.message,'error');}
+});
+
+async function bumpScore(side,delta){
+  if(selId===null)return;
+  const m=gM(selId);if(!m||!m.topTeam||!m.botTeam)return;
+  pushUndo();
+  const key=side==='top'?'topScore':'botScore';
+  const cur=parseInt(m[key]||0,10);
+  m[key]=Math.max(0,cur+delta);
+  updateSeriesAuto(m);
+  try{
+    await save();render();refreshSeriesUI(m);buildPicker(document.getElementById('mp-search').value);
+    if(m.status==='done')toast(`${m.winner} wins the series! ${m.seriesTxt}`,'g',4500);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('series-msg','Save failed: '+e.message,'error');
+  }
+}
+document.getElementById('sc-top-plus').addEventListener('click',()=>bumpScore('top',1));
+document.getElementById('sc-top-minus').addEventListener('click',()=>bumpScore('top',-1));
+document.getElementById('sc-bot-plus').addEventListener('click',()=>bumpScore('bot',1));
+document.getElementById('sc-bot-minus').addEventListener('click',()=>bumpScore('bot',-1));
+
+document.getElementById('e-series').addEventListener('change',async()=>{
+  if(selId===null)return;
+  const m=gM(selId);if(!m)return;
+  pushUndo();
+  m.seriesTxt=document.getElementById('e-series').value.trim();
+  try{await save();render();}catch(e){UNDO_STACK.pop();refreshUndoBtn();showMsg('series-msg','Save failed: '+e.message,'error');}
+});
+
+// ── Advance winner into the next round (or crown champion if Finals) ──
+function computeNextSlot(m){
+  if(m.type==='main'){
+    const round=Math.floor(m.pos/10), idx=m.pos%10;
+    if(round===0){const r2=gR(m.conf,1);return{target:r2[Math.floor(idx/2)],slot:idx%2===0?'top':'bot'};}
+    if(round===1){const cf=gR(m.conf,2);return{target:cf[0],slot:idx===0?'top':'bot'};}
+    if(round===2){const f=gF();return{target:f,slot:m.conf==='west'?'top':'bot'};}
+  }
+  return null;
+}
+document.getElementById('advance-btn').addEventListener('click',async()=>{
+  if(selId===null)return;
+  const m=gM(selId);if(!m||!m.winner)return;
+  pushUndo();
+  const winnerTeam=m.winner, winnerSeed=m.winner===m.topTeam?m.topSeed:m.botSeed;
+  const loserTeam=m.winner===m.topTeam?m.botTeam:m.topTeam;
+  const loserSeed=m.winner===m.topTeam?m.botSeed:m.topSeed;
+
+  if(m.type==='pi-a'){
+    const target=gR(m.conf,0)[3];
+    target.botTeam=winnerTeam;target.botSeed=7;
+    const pc=gPI(m.conf,'pi-c');pc.topTeam=loserTeam;pc.topSeed=loserSeed;
+  }else if(m.type==='pi-b'){
+    const pc=gPI(m.conf,'pi-c');pc.botTeam=winnerTeam;pc.botSeed=winnerSeed;
+  }else if(m.type==='pi-c'){
+    const target=gR(m.conf,0)[0];
+    target.botTeam=winnerTeam;target.botSeed=8;
+  }else if(m.type==='main'){
+    const next=computeNextSlot(m);
+    if(next&&next.target){
+      if(next.slot==='top'){next.target.topTeam=winnerTeam;next.target.topSeed=winnerSeed;}
+      else{next.target.botTeam=winnerTeam;next.target.botSeed=winnerSeed;}
+    }
+  }else if(m.type==='finals'){
+    BD.champion=winnerTeam;BD.championSeries=m.seriesTxt;
+  }
+
+  try{
+    await save();render();buildPicker(document.getElementById('mp-search').value);fillForm(m.id);
+    showMsg('advance-msg','✓ Advanced!','success');
+    toast(m.type==='finals'?`🏆 ${winnerTeam} wins the RPL Championship!`:`${winnerTeam} advances`, m.type==='finals'?'gold':'g',m.type==='finals'?6000:3000);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('advance-msg','Advance failed: '+e.message,'error');
+  }
+});
+
+// ═══════════════════════════════════════════════════
+// CHAMPION TAB (manual override)
+// ═══════════════════════════════════════════════════
 document.getElementById('champ-btn').addEventListener('click',async()=>{
   const a=document.getElementById('c-abb').value.trim().toUpperCase();
   const s=document.getElementById('c-series').value.trim();
   if(!a){showMsg('champ-msg','Enter abbreviation.','error');return;}
-  BD.champion=a;BD.championSeries=s;await save();render();
-  showMsg('champ-msg',`✓ ${a} crowned!`,'success');toast(`🏆 ${a} wins the RPL Championship!`,'gold',6000);
+  pushUndo();
+  BD.champion=a;BD.championSeries=s;
+  try{
+    await save();render();
+    showMsg('champ-msg',`✓ ${a} crowned!`,'success');toast(`🏆 ${a} wins the RPL Championship!`,'gold',6000);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('champ-msg','Failed: '+e.message,'error');
+  }
 });
 
+// ═══════════════════════════════════════════════════
+// SEASON TAB — reset / archive
+// ═══════════════════════════════════════════════════
 document.getElementById('reset-btn').addEventListener('click',async()=>{
   if(!confirm('Reset the current bracket WITHOUT archiving it? This cannot be undone.'))return;
+  pushUndo();
   const seasonNum=BD.season;
-  BD=buildDefault(seasonNum);await save();render();buildPicker();
-  showMsg('reset-msg','✓ Bracket reset.','success');toast('Bracket reset','',3000);
+  BD=buildDefault(seasonNum);
+  try{
+    await save();render();buildPicker();
+    showMsg('reset-msg','✓ Bracket reset.','success');toast('Bracket reset','',3000);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('reset-msg','Reset failed: '+e.message,'error');
+  }
 });
 
 document.getElementById('archive-season-btn').addEventListener('click',async()=>{
@@ -1088,17 +1342,19 @@ document.getElementById('archive-season-btn').addEventListener('click',async()=>
     const snapshot=JSON.parse(JSON.stringify(BD));
     snapshot.archivedAt=new Date().toISOString();
     const existing=(ARCHIVE||[]).filter(s=>s.season!==snapshot.season);
-    ARCHIVE=[...existing,snapshot];
-    const ok1=await rSet(RK_ARCHIVE,ARCHIVE);
-    BD=buildDefault(nextSeason);
-    const ok2=await rSet(RK_BRACKET,BD);
-    if(!ok1||!ok2)throw new Error('Sync failed');
+    const nextArchive=[...existing,snapshot];
+    await apiPost('/api/archive',nextArchive);
+    ARCHIVE=nextArchive;
+    const newBracket=buildDefault(nextSeason);
+    await apiPost('/api/bracket',newBracket);
+    BD=newBracket;
+    UNDO_STACK=[];refreshUndoBtn(); // fresh season — old undo history no longer applies
     render();buildPicker();
     showMsg('archive-msg',`✓ Season ${snapshot.season} archived. Season ${nextSeason} started.`,'success');
     toast(`📦 Season ${snapshot.season} archived — Season ${nextSeason} is live`,'gold',6000);
     document.getElementById('arc-next-season').value='';
   }catch(e){
-    showMsg('archive-msg','Archiving failed. Check your connection and try again.','error');
+    showMsg('archive-msg','Archiving failed: '+e.message,'error');
   }finally{
     btn.disabled=false;btn.textContent='Archive Current Season & Start Next';
   }
@@ -1109,6 +1365,8 @@ document.getElementById('archive-season-btn').addEventListener('click',async()=>
 // ═══════════════════════════════════════════════════
 window.importStandings=async function(conf,teams){
   if(!['east','west'].includes(conf)){console.error("conf must be 'east' or 'west'");return;}
+  if(!adminOk){console.error('Unlock the admin panel first.');return;}
+  pushUndo();
   const pa=gPI(conf,'pi-a'),pb=gPI(conf,'pi-b');
   const s7=teams.find(t=>t.seed===7),s8=teams.find(t=>t.seed===8);
   const s9=teams.find(t=>t.seed===9),s10=teams.find(t=>t.seed===10);
@@ -1124,18 +1382,32 @@ window.importStandings=async function(conf,teams){
     m.botTeam=bot?bot.abb.toUpperCase():'';m.botSeed=bs;
     m.winner='';m.topScore='';m.botScore='';m.status='';m.seriesTxt='';
   });
-  await save();render();if(adminOk)buildPicker();
-  console.log(`%c✓ Imported ${conf} standings`,'color:#3de87a;font-weight:bold');
+  try{
+    await save();render();if(adminOk)buildPicker();refreshUndoBtn();
+    console.log(`%c✓ Imported ${conf} standings`,'color:#3de87a;font-weight:bold');
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    console.error('Import failed:',e.message);
+  }
 };
 
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
 (async()=>{
+  adminToken=getStoredToken();
+  if(adminToken)adminOk=true;
   await load();
   await loadArchive();
   render();
-  console.log('%cRPL Bracket · Console: importStandings(conf,[{seed,abb}...])','color:#e8001d;font-weight:bold');
+  if(adminOk){
+    document.getElementById('admin-lock-screen').classList.add('hidden');
+    const ul=document.getElementById('admin-unlocked');ul.classList.remove('hidden');ul.style.display='flex';
+    document.getElementById('admin-sub-text').textContent='Live changes sync instantly.';
+    buildPicker();
+  }
+  refreshUndoBtn();
+  console.log('%cRPL Bracket · Console: importStandings(conf,[{seed,abb}...]) — admin panel must be unlocked first','color:#e8001d;font-weight:bold');
 })();
 </script>
 </body>
