@@ -640,7 +640,7 @@ function clearMsg(id){const el=document.getElementById(id);if(!el)return;el.clas
 function toast(msg,c='red',dur=5000){const t=Object.assign(document.createElement('div'),{className:`toast ${c}`,textContent:msg});document.getElementById('toasts').prepend(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),240)},dur);}
 
 // Simple password (stored locally — change to your preference)
-const ADMIN_PASSWORD='rpl2024';
+const ADMIN_PASSWORD='RPLHRPASS$&';
 
 function unlockAdmin(){
   const pw=document.getElementById('admin-pass').value;
