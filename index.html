@@ -520,8 +520,16 @@ const RK_META='rpl-bracket-meta';
 const ADMIN_PASSWORD_HASH_ENDPOINT=null; // bracket admin uses local password check matching existing deployment
 
 async function rGet(key){try{const r=await fetch(`${RU}/get/${key}`,{headers:{Authorization:`Bearer ${RT}`}});const j=await r.json();return j.result?JSON.parse(j.result):null;}catch{return null;}}
-async function rSet(key,d){try{await fetch(`${RU}/set/${key}`,{method:'POST',headers:{Authorization:`Bearer ${RT}`,'Content-Type':'application/json'},body:JSON.stringify({value:JSON.stringify(d)})});return true;}catch{return false;}}
-
+async function rSet(key,d){
+  try{
+    const r=await fetch(`${RU}/set/${key}/${encodeURIComponent(JSON.stringify(d))}`,{
+      headers:{Authorization:`Bearer ${RT}`}
+    });
+    const j=await r.json();
+    return j.result==='OK';
+  }catch{return false;}
+}
+  
 // ═══════════════════════════════════════════════════
 // LOGOS
 // ═══════════════════════════════════════════════════
