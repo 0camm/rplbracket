@@ -221,6 +221,7 @@ body{
 .admin-lock-input:focus{border-color:rgba(232,0,29,.4);}
 .admin-lock-btn{background:var(--red);border:none;border-radius:10px;padding:0 20px;color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:opacity .15s;min-height:50px;white-space:nowrap;}
 .admin-lock-btn:hover{opacity:.85;}
+.admin-lock-btn:disabled{opacity:.5;cursor:not-allowed;}
 .admin-body-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 env(safe-area-inset-bottom,0);}
 .admin-section{background:var(--bg);border:1px solid var(--b);border-radius:10px;overflow:hidden;margin:12px 16px;}
 .admin-section:last-child{margin-bottom:16px;}
@@ -483,7 +484,6 @@ function buildDefaultBracket(){
 // ── STATE ──
 let bracketData=null;
 let adminUnlocked=false;
-let adminPass='';
 let selectedMatchupId=null;
 
 const STORAGE_KEY='rpl-bracket-s11';
@@ -639,23 +639,48 @@ function showMsg(id,text,type){const el=document.getElementById(id);if(!el)retur
 function clearMsg(id){const el=document.getElementById(id);if(!el)return;el.className='panel-msg';el.textContent='';}
 function toast(msg,c='red',dur=5000){const t=Object.assign(document.createElement('div'),{className:`toast ${c}`,textContent:msg});document.getElementById('toasts').prepend(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),240)},dur);}
 
-// Simple password (stored locally — change to your preference)
-const ADMIN_PASSWORD='RPLHRPASS$&';
+// ── PASSWORD CHECK ──
+// The password itself never lives in this file. It's set as the
+// ADMIN_PASSWORD environment variable in your Vercel project, and this
+// page asks the /api/verify-admin serverless function whether a submitted
+// password is correct. See /api/verify-admin.js.
+async function unlockAdmin(){
+  const passInput=document.getElementById('admin-pass');
+  const btn=document.querySelector('.admin-lock-btn');
+  const pw=passInput.value;
+  if(!pw){showMsg('lock-msg','Enter a password.','error');return;}
 
-function unlockAdmin(){
-  const pw=document.getElementById('admin-pass').value;
-  if(pw===ADMIN_PASSWORD){
-    adminUnlocked=true;
-    adminPass=pw;
-    document.getElementById('admin-lock-screen').classList.add('hidden');
-    const ul=document.getElementById('admin-unlocked');
-    ul.classList.remove('hidden');
-    ul.style.display='flex';
-    document.getElementById('admin-sub-text').textContent='Changes apply instantly.';
-    renderMatchupPicker();
-  } else {
-    document.getElementById('admin-pass').style.borderColor='rgba(232,0,29,.6)';
-    showMsg('lock-msg','Wrong password.','error');
+  btn.disabled=true;
+  const origLabel=btn.textContent;
+  btn.textContent='Checking…';
+  clearMsg('lock-msg');
+
+  try{
+    const res=await fetch('/api/verify-admin',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw})
+    });
+    const data=await res.json().catch(()=>({ok:false}));
+
+    if(res.ok&&data.ok){
+      adminUnlocked=true;
+      document.getElementById('admin-lock-screen').classList.add('hidden');
+      const ul=document.getElementById('admin-unlocked');
+      ul.classList.remove('hidden');
+      ul.style.display='flex';
+      document.getElementById('admin-sub-text').textContent='Changes apply instantly.';
+      passInput.value='';
+      renderMatchupPicker();
+    } else {
+      passInput.style.borderColor='rgba(232,0,29,.6)';
+      showMsg('lock-msg',data.error||'Wrong password.','error');
+    }
+  }catch(err){
+    showMsg('lock-msg','Could not reach the server. Check your connection and try again.','error');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=origLabel;
   }
 }
 
@@ -752,9 +777,64 @@ document.getElementById('reset-btn').addEventListener('click',()=>{
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAdmin();});
 
+// ── CONSOLE COMMANDS: IMPORT STANDINGS INTO ROUND 1 SEEDING ──
+// Open devtools console on the live page and run one of:
+//   loadSeedDataFromImage()              -> loads the East/West standings from your screenshot
+//   importStandings('east', [...])        -> loads a custom list of {seed, abb} for one conference
+//
+// Seeding pairs follow the standard bracket: 1v16, 2v15, 3v14 ... 8v9.
+// Any seed you don't supply (e.g. a missing #16) is left as TBD.
+window.importStandings=function(conf,teams){
+  if(conf!=='east'&&conf!=='west'){
+    console.error("importStandings: conf must be 'east' or 'west'");
+    return;
+  }
+  if(!Array.isArray(teams)||!teams.length){
+    console.error('importStandings: pass an array like [{seed:1, abb:"NYK"}, ...]');
+    return;
+  }
+  const N=16;
+  const matchups=getConf(conf,0); // 8 first-round matchups, pos 0..7
+  for(let i=0;i<8;i++){
+    const topSeed=i+1;
+    const botSeed=N-i;
+    const top=teams.find(t=>t.seed===topSeed);
+    const bot=teams.find(t=>t.seed===botSeed);
+    const m=matchups[i];
+    if(!m)continue;
+    m.topTeam=top?String(top.abb).toUpperCase():'';
+    m.topSeed=top?top.seed:'';
+    m.botTeam=bot?String(bot.abb).toUpperCase():'';
+    m.botSeed=bot?bot.seed:'';
+    m.topScore='';m.botScore='';m.winner='';m.status='';m.seriesTxt='';
+  }
+  saveData();
+  renderBracket();
+  renderMatchupPicker();
+  console.log(`✓ Imported ${teams.length} ${conf} teams into Round 1.`);
+};
+
+window.loadSeedDataFromImage=function(){
+  importStandings('east',[
+    {seed:1,abb:'NYK'},{seed:2,abb:'PHI'},{seed:3,abb:'IND'},{seed:4,abb:'CHA'},
+    {seed:5,abb:'CLE'},{seed:6,abb:'CHI'},{seed:7,abb:'MIA'},{seed:8,abb:'BOS'},
+    {seed:9,abb:'WAS'},{seed:10,abb:'DET'},{seed:11,abb:'ORL'},{seed:12,abb:'ATL'},
+    {seed:13,abb:'BKN'},{seed:14,abb:'TOR'},{seed:15,abb:'MIL'}
+  ]);
+  importStandings('west',[
+    {seed:1,abb:'SAS'},{seed:2,abb:'GSW'},{seed:3,abb:'LAC'},{seed:4,abb:'PHX'},
+    {seed:5,abb:'MIN'},{seed:6,abb:'HOU'},{seed:7,abb:'DEN'},{seed:8,abb:'DAL'},
+    {seed:9,abb:'MEM'},{seed:10,abb:'OKC'},{seed:11,abb:'SAC'},{seed:12,abb:'LAL'},
+    {seed:13,abb:'NOP'},{seed:14,abb:'UTAH'},{seed:15,abb:'POR'}
+  ]);
+  console.log('✓ Loaded East + West standings into Round 1.');
+};
+
 // ── INIT ──
 bracketData=loadData();
 renderBracket();
+console.log('%cRPL Bracket console tools loaded.','color:#e8001d;font-weight:bold');
+console.log('Run loadSeedDataFromImage() to import the East/West standings, or importStandings(conf, teams) for a custom list.');
 
 function setLoading(on){const bar=document.getElementById('loading-bar');bar.style.width=on?'70%':'100%';if(!on)setTimeout(()=>bar.style.width='0%',300);}
 </script>
