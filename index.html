@@ -484,9 +484,9 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
             <div class="flbl">Series Format</div>
             <select class="field-input" id="e-format" style="margin-bottom:8px">
               <option value="1">Best of 1</option>
-              <option value="3">Best of 3</option>
+              <option value="3" selected>Best of 3</option>
               <option value="5">Best of 5</option>
-              <option value="7" selected>Best of 7</option>
+              <option value="7">Best of 7</option>
             </select>
             <div class="series-need" id="series-need-lbl">First to 4 wins</div>
             <div class="series-ctrl">
@@ -624,7 +624,7 @@ const logoUrl=a=>{const k=ESPN_MAP[(a||'').toUpperCase()];return k?`https://a.es
 // ═══════════════════════════════════════════════════
 // DATA MODEL
 // ═══════════════════════════════════════════════════
-const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:'',format:7});
+const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:'',format:type.startsWith('pi')?1:3});
 function buildDefault(seasonNum){
   const m=[];let id=0;
   ['east','west'].forEach(c=>{
@@ -676,7 +676,7 @@ async function load(){
   try{d=await apiGet('/api/bracket');}catch(e){setStatus('err');}
   BD=d&&d.matchups?d:buildDefault(11);
   if(!BD.season)BD.season=11;
-  BD.matchups.forEach(m=>{if(!m.format)m.format=7;});
+  BD.matchups.forEach(m=>{if(!m.format)m.format=m.type.startsWith('pi')?1:3;});
   if(!d||!d.matchups){try{await apiPost('/api/bracket',BD);}catch{}}
   setLoad(false);setStatus('ok');
 }
