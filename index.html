@@ -286,12 +286,20 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 .panel-msg.success{background:var(--gr-d);border:1px solid rgba(24,212,100,.18);color:var(--gr)}
 .panel-msg.error{background:var(--red-dim);border:1px solid var(--red-mid);color:#f87171}
 .hidden{display:none!important}
-.mp-list{display:flex;flex-direction:column;gap:3px;max-height:220px;overflow-y:auto;margin-bottom:8px}
+.mp-filters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.mp-filter{background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:5px 11px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mu);cursor:pointer;transition:all .15s;min-height:30px}
+.mp-filter:hover{color:var(--tx)}
+.mp-filter.active{background:var(--red-dim);border-color:var(--red-mid);color:var(--red)}
+.mp-list{display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;margin-bottom:8px}
+.mp-group{display:flex;flex-direction:column;gap:3px}
+.mp-group-hd{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);padding:2px 2px 1px}
 .mp-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:6px;border:1px solid var(--b);background:var(--s2);cursor:pointer;transition:all .1s}
 .mp-row:hover,.mp-row.sel{border-color:var(--red-edge);background:var(--red-dim)}
 .mp-name{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.04em}
 .mp-meta{font-size:9px;color:var(--mu)}
 .mp-tag{font-size:8px;font-weight:700;letter-spacing:.1em;padding:1px 5px;border-radius:3px;background:var(--s3);color:var(--mu);flex-shrink:0;white-space:nowrap}
+.mp-tag.live{background:var(--gr-d);color:var(--gr)}
+.mp-tag.done{background:rgba(255,255,255,.05);color:var(--tx2)}
 .series-ctrl{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px 12px;margin-bottom:8px}
 .series-ctrl-team{flex:1;min-width:0}
 .series-ctrl-name{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.04em;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -302,6 +310,14 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
 .sc-btn.plus{color:var(--gr);border-color:rgba(24,212,100,.2)}
 .sc-btn.plus:hover{background:var(--gr-d);border-color:rgba(24,212,100,.4)}
 .series-need{font-size:9px;color:var(--mu);text-align:center;margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
+.format-lock{display:flex;align-items:center;gap:9px;background:var(--s2);border:1px solid var(--b);border-radius:7px;padding:9px 12px;margin-bottom:8px}
+.format-lock-tag{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--tx);background:var(--s3);border:1px solid var(--b);border-radius:5px;padding:3px 8px;flex-shrink:0}
+.format-lock-note{font-size:10px;color:var(--mu);line-height:1.3}
+.forfeit-row{display:flex;gap:8px;margin-top:2px}
+.forfeit-btn{flex:1;background:var(--red-dim);border:1px solid var(--red-mid);border-radius:7px;padding:9px 8px;color:#f87171;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .15s;min-height:38px;text-align:center;line-height:1.25}
+.forfeit-btn:hover:not(:disabled){background:rgba(232,0,29,.18);border-color:rgba(232,0,29,.5)}
+.forfeit-btn:disabled{opacity:.4;cursor:not-allowed}
+.forfeit-tag{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.08em;color:#f87171;background:var(--red-dim);border:1px solid var(--red-mid);border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle}
 
 /* ── TOASTS ── */
 #toasts{position:fixed;bottom:20px;right:16px;display:flex;flex-direction:column-reverse;gap:7px;z-index:9999;pointer-events:none;width:min(300px,calc(100vw - 32px))}
@@ -453,6 +469,12 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
         </div>
         <div class="admin-section-body">
           <input class="field-input" type="text" id="mp-search" placeholder="Search matchup or team…" autocomplete="off" spellcheck="false" style="margin-bottom:8px">
+          <div class="mp-filters" id="mp-filters">
+            <button class="mp-filter active" data-f="all">All</button>
+            <button class="mp-filter" data-f="needs">Needs Setup</button>
+            <button class="mp-filter" data-f="live">Live</button>
+            <button class="mp-filter" data-f="done">Done</button>
+          </div>
           <div class="mp-list" id="mp-list"></div>
         </div>
       </div>
@@ -478,16 +500,14 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
         <div class="admin-section">
           <div class="admin-section-hd">
             <div class="admin-section-icon green">🏐</div>
-            <div><div class="admin-section-label">Series Score</div><div class="admin-section-desc" id="series-desc">Set the format, then tap + to record game wins. Winner &amp; status update automatically.</div></div>
+            <div><div class="admin-section-label">Series Score</div><div class="admin-section-desc" id="series-desc">Format is set automatically by round. Tap + to record game wins — winner &amp; status update automatically.</div></div>
           </div>
           <div class="admin-section-body">
             <div class="flbl">Series Format</div>
-            <select class="field-input" id="e-format" style="margin-bottom:8px">
-              <option value="1">Best of 1</option>
-              <option value="3" selected>Best of 3</option>
-              <option value="5">Best of 5</option>
-              <option value="7">Best of 7</option>
-            </select>
+            <div class="format-lock" id="e-format-lock">
+              <span class="format-lock-tag" id="e-format-tag">BO3</span>
+              <span class="format-lock-note" id="e-format-note">Best of 3 — set automatically for this round</span>
+            </div>
             <div class="series-need" id="series-need-lbl">First to 4 wins</div>
             <div class="series-ctrl">
               <div class="series-ctrl-team"><div class="series-ctrl-name" id="sc-top-name">Top</div></div>
@@ -507,6 +527,19 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
             </div>
             <div style="margin-bottom:6px"><div class="flbl">Series Status Text</div><input class="field-input" id="e-series" placeholder="Auto-generated, or override"></div>
             <div class="panel-msg" id="series-msg"></div>
+          </div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-section-hd">
+            <div class="admin-section-icon red">⚑</div>
+            <div><div class="admin-section-label">Forfeit</div><div class="admin-section-desc">If a team can't play, mark a forfeit — the other side instantly wins the series at the correct score.</div></div>
+          </div>
+          <div class="admin-section-body">
+            <div class="forfeit-row">
+              <button class="forfeit-btn" id="ff-top-btn">Top team forfeits</button>
+              <button class="forfeit-btn" id="ff-bot-btn">Bottom team forfeits</button>
+            </div>
           </div>
         </div>
 
@@ -624,7 +657,10 @@ const logoUrl=a=>{const k=ESPN_MAP[(a||'').toUpperCase()];return k?`https://a.es
 // ═══════════════════════════════════════════════════
 // DATA MODEL
 // ═══════════════════════════════════════════════════
-const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:'',format:type.startsWith('pi')?1:3});
+// Format is fixed by matchup type — play-in rounds are always single-elimination (Bo1),
+// every other round (R1, R2, Conference Finals, Finals) is always best of 3. Not admin-editable.
+const formatForType=type=>type.startsWith('pi')?1:3;
+const defM=(id,conf,type,pos)=>({id,conf,type,pos,topTeam:'',topSeed:'',topScore:'',botTeam:'',botSeed:'',botScore:'',winner:'',status:'',seriesTxt:'',forfeit:'',format:formatForType(type)});
 function buildDefault(seasonNum){
   const m=[];let id=0;
   ['east','west'].forEach(c=>{
@@ -676,7 +712,9 @@ async function load(){
   try{d=await apiGet('/api/bracket');}catch(e){setStatus('err');}
   BD=d&&d.matchups?d:buildDefault(11);
   if(!BD.season)BD.season=11;
-  BD.matchups.forEach(m=>{if(!m.format)m.format=m.type.startsWith('pi')?1:3;});
+  // Format is always derived from matchup type — re-stamp on every load so any
+  // legacy/edited data snaps back to PI=Bo1, everything else=Bo3.
+  BD.matchups.forEach(m=>{m.format=formatForType(m.type);if(m.forfeit===undefined)m.forfeit='';});
   if(!d||!d.matchups){try{await apiPost('/api/bracket',BD);}catch{}}
   setLoad(false);setStatus('ok');
 }
@@ -1125,21 +1163,56 @@ function mLabel(m){
   const t=m.topTeam&&m.botTeam?`${m.topTeam} vs ${m.botTeam}`:m.topTeam||m.botTeam||'Empty';
   return{r,t};
 }
+let mpFilter='all';
 function buildPicker(filter){
   const l=document.getElementById('mp-list');
   const q=(filter||'').trim().toLowerCase();
   const items=BD.matchups.filter(m=>{
+    if(mpFilter==='needs'&&m.topTeam&&m.botTeam)return false; // both teams already set — not a setup gap
+    if(mpFilter==='live'&&m.status!=='live')return false;
+    if(mpFilter==='done'&&m.status!=='done')return false;
     if(!q)return true;
     const{r,t}=mLabel(m);
     return r.toLowerCase().includes(q)||t.toLowerCase().includes(q);
   });
-  l.innerHTML=items.map(m=>{
-    const{r,t}=mLabel(m);
-    return`<div class="mp-row${selId===m.id?' sel':''}" data-id="${m.id}"><div><div class="mp-name">${t}</div><div class="mp-meta">${r}${m.status?' · '+m.status.toUpperCase():''}</div></div><span class="mp-tag">${r}</span></div>`;
-  }).join('')||`<div style="font-size:12px;color:var(--mu);text-align:center;padding:14px 0;font-style:italic;">No matches.</div>`;
+  // Group into round buckets so the list reads top-to-bottom in tournament order
+  // instead of raw insertion order — makes it much faster to find a matchup.
+  const order=['East Play-In','West Play-In','East R1','West R1','East R2','West R2','East Conf Finals','West Conf Finals','Finals'];
+  const groups={};
+  items.forEach(m=>{
+    const grp=groupLabel(m);
+    (groups[grp]=groups[grp]||[]).push(m);
+  });
+  const html=order.filter(g=>groups[g]&&groups[g].length).map(g=>{
+    const rows=groups[g].map(m=>{
+      const{t}=mLabel(m);
+      const statusTag=m.status?` · ${m.status.toUpperCase()}`:'';
+      const ffTag=m.forfeit?'<span class="forfeit-tag">FF</span>':'';
+      const pillTxt=m.status==='done'?'DONE':m.status==='live'?'LIVE':'OPEN';
+      const pillCls=m.status==='done'?'done':m.status==='live'?'live':'';
+      return`<div class="mp-row${selId===m.id?' sel':''}" data-id="${m.id}"><div><div class="mp-name">${t}${ffTag}</div><div class="mp-meta">BO${m.format}${statusTag}</div></div><span class="mp-tag ${pillCls}">${pillTxt}</span></div>`;
+    }).join('');
+    return`<div class="mp-group"><div class="mp-group-hd">${g}</div>${rows}</div>`;
+  }).join('');
+  l.innerHTML=html||`<div style="font-size:12px;color:var(--mu);text-align:center;padding:14px 0;font-style:italic;">No matches.</div>`;
   l.querySelectorAll('.mp-row').forEach(el=>el.addEventListener('click',()=>{selId=parseInt(el.dataset.id,10);buildPicker(document.getElementById('mp-search').value);fillForm(selId);}));
 }
+function groupLabel(m){
+  if(m.type==='finals')return'Finals';
+  const c=m.conf==='east'?'East':'West';
+  if(m.type.startsWith('pi'))return`${c} Play-In`;
+  const n=Math.floor(m.pos/10);
+  return`${c} ${['R1','R2','Conf Finals'][n]}`;
+}
 document.getElementById('mp-search').addEventListener('input',e=>buildPicker(e.target.value));
+document.querySelectorAll('.mp-filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mp-filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    mpFilter=btn.dataset.f;
+    buildPicker(document.getElementById('mp-search').value);
+  });
+});
 
 // ═══════════════════════════════════════════════════
 // EDIT FORM — teams/seeds, series score, advance
@@ -1147,9 +1220,12 @@ document.getElementById('mp-search').addEventListener('input',e=>buildPicker(e.t
 function neededWins(fmt){return Math.ceil(parseInt(fmt||7,10)/2);}
 
 function refreshSeriesUI(m){
-  const fmt=parseInt(m.format||7,10);
-  document.getElementById('e-format').value=String(fmt);
-  document.getElementById('series-need-lbl').textContent=`First to ${neededWins(fmt)} wins`;
+  const fmt=parseInt(m.format||formatForType(m.type),10);
+  document.getElementById('e-format-tag').textContent=`BO${fmt}`;
+  document.getElementById('e-format-note').textContent=m.type.startsWith('pi')
+    ?'Best of 1 — play-in games are always single-elimination'
+    :'Best of 3 — set automatically for this round';
+  document.getElementById('series-need-lbl').textContent=`First to ${neededWins(fmt)} win${neededWins(fmt)>1?'s':''}`;
   document.getElementById('sc-top-name').textContent=m.topTeam||'Top team';
   document.getElementById('sc-bot-name').textContent=m.botTeam||'Bottom team';
   document.getElementById('sc-top-score').textContent=m.topScore!==''&&m.topScore!==undefined?m.topScore:0;
@@ -1158,21 +1234,50 @@ function refreshSeriesUI(m){
   const ready=!!(m.topTeam&&m.botTeam);
   document.getElementById('sc-top-plus').disabled=!ready;
   document.getElementById('sc-bot-plus').disabled=!ready;
+  const ffTopBtn=document.getElementById('ff-top-btn'), ffBotBtn=document.getElementById('ff-bot-btn');
+  if(ffTopBtn){ffTopBtn.disabled=!ready;ffTopBtn.textContent=`${m.topTeam||'Top team'} forfeits`;}
+  if(ffBotBtn){ffBotBtn.disabled=!ready;ffBotBtn.textContent=`${m.botTeam||'Bottom team'} forfeits`;}
   const advBtn=document.getElementById('advance-btn');
   advBtn.disabled=!m.winner;
-  advBtn.textContent=m.type==='finals'&&m.winner?`Crown ${m.winner} Champion 🏆`:m.winner?`Advance ${m.winner} →`:'Advance Winner →';
+  const ffTag=m.forfeit?' (FF)':'';
+  advBtn.textContent=m.type==='finals'&&m.winner?`Crown ${m.winner} Champion 🏆`:m.winner?`Advance ${m.winner}${ffTag} →`:'Advance Winner →';
 }
 
 function updateSeriesAuto(m){
   const ts=parseInt(m.topScore||0,10), bs=parseInt(m.botScore||0,10);
   const need=neededWins(m.format);
+  const ffTag=m.forfeit?' (FF)':'';
   if(m.topTeam&&m.botTeam){
-    if(ts>=need){m.winner=m.topTeam;m.status='done';m.seriesTxt=`${m.topTeam} wins ${ts}-${bs}`;}
-    else if(bs>=need){m.winner=m.botTeam;m.status='done';m.seriesTxt=`${m.botTeam} wins ${bs}-${ts}`;}
+    if(ts>=need){m.winner=m.topTeam;m.status='done';m.seriesTxt=`${m.topTeam} wins ${ts}-${bs}${ffTag}`;}
+    else if(bs>=need){m.winner=m.botTeam;m.status='done';m.seriesTxt=`${m.botTeam} wins ${bs}-${ts}${ffTag}`;}
     else if(ts>0||bs>0){
-      m.winner='';m.status='live';
+      m.winner='';m.status='live';m.forfeit='';
       m.seriesTxt=ts===bs?`Series tied ${ts}-${bs}`:`${ts>bs?m.topTeam:m.botTeam} leads ${Math.max(ts,bs)}-${Math.min(ts,bs)}`;
-    }else{m.winner='';m.status='';m.seriesTxt='';}
+    }else{m.winner='';m.status='';m.seriesTxt='';m.forfeit='';}
+  }
+}
+
+// ── Forfeit: instantly wins the series for the OTHER side at the exact
+// score needed to clinch (e.g. 1-0 for a Bo1 play-in, 2-0 for a Bo3 round) ──
+async function forfeitSeries(loserSide){
+  if(selId===null)return;
+  const m=gM(selId);if(!m||!m.topTeam||!m.botTeam)return;
+  const loserName=loserSide==='top'?m.topTeam:m.botTeam;
+  const winnerName=loserSide==='top'?m.botTeam:m.topTeam;
+  if(!confirm(`Mark this as a forfeit?\n\n${loserName} forfeits — ${winnerName} wins the series ${neededWins(m.format)}-0.`))return;
+  pushUndo();
+  const need=neededWins(m.format);
+  m.forfeit=loserName;
+  if(loserSide==='top'){m.topScore=0;m.botScore=need;}
+  else{m.topScore=need;m.botScore=0;}
+  updateSeriesAuto(m);
+  try{
+    await save();render();refreshSeriesUI(m);buildPicker(document.getElementById('mp-search').value);
+    showMsg('series-msg',`✓ ${loserName} forfeited. ${winnerName} advances to be confirmed below.`,'success');
+    toast(`${loserName} forfeits — ${winnerName} wins the series`,'amber',4500);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('series-msg','Forfeit failed: '+e.message,'error');
   }
 }
 
@@ -1208,16 +1313,6 @@ document.getElementById('save-teams-btn').addEventListener('click',async()=>{
   }
 });
 
-document.getElementById('e-format').addEventListener('change',async()=>{
-  if(selId===null)return;
-  const m=gM(selId);if(!m)return;
-  pushUndo();
-  m.format=parseInt(document.getElementById('e-format').value,10);
-  updateSeriesAuto(m);
-  try{await save();render();refreshSeriesUI(m);buildPicker(document.getElementById('mp-search').value);}
-  catch(e){UNDO_STACK.pop();refreshUndoBtn();showMsg('series-msg','Save failed: '+e.message,'error');}
-});
-
 async function bumpScore(side,delta){
   if(selId===null)return;
   const m=gM(selId);if(!m||!m.topTeam||!m.botTeam)return;
@@ -1225,6 +1320,7 @@ async function bumpScore(side,delta){
   const key=side==='top'?'topScore':'botScore';
   const cur=parseInt(m[key]||0,10);
   m[key]=Math.max(0,cur+delta);
+  m.forfeit=''; // manual score edit overrides any prior forfeit
   updateSeriesAuto(m);
   try{
     await save();render();refreshSeriesUI(m);buildPicker(document.getElementById('mp-search').value);
@@ -1238,6 +1334,8 @@ document.getElementById('sc-top-plus').addEventListener('click',()=>bumpScore('t
 document.getElementById('sc-top-minus').addEventListener('click',()=>bumpScore('top',-1));
 document.getElementById('sc-bot-plus').addEventListener('click',()=>bumpScore('bot',1));
 document.getElementById('sc-bot-minus').addEventListener('click',()=>bumpScore('bot',-1));
+document.getElementById('ff-top-btn').addEventListener('click',()=>forfeitSeries('top'));
+document.getElementById('ff-bot-btn').addEventListener('click',()=>forfeitSeries('bot'));
 
 document.getElementById('e-series').addEventListener('change',async()=>{
   if(selId===null)return;
