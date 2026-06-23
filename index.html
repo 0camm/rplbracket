@@ -550,6 +550,7 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;backgr
           </div>
           <div class="admin-section-body">
             <button class="gold-btn" id="advance-btn" disabled>Advance Winner →</button>
+            <button class="danger-btn" id="unadvance-btn" style="margin-top:6px;display:none;">⟵ Unadvance (Clear Next Slot)</button>
             <div class="panel-msg" id="advance-msg"></div>
           </div>
         </div>
@@ -898,6 +899,14 @@ function renderDesktop(){
   gR('west',1).forEach((m,i)=>add(cardEl(m,R2_W_X,R2Y[i])));
   gR('west',2).forEach(m=>add(cardEl(m,CF_W_X,CFY)));
 
+  // LARRY O'BRIEN TROPHY (behind finals)
+  const lobImg=document.createElement('img');
+  lobImg.src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Larry_O%27Brien_Championship_Trophy_icon.svg/1280px-Larry_O%27Brien_Championship_Trophy_icon.svg.png';
+  lobImg.alt='Larry O\'Brien Trophy';
+  const trophyW=110, trophyH=180;
+  lobImg.style.cssText=`position:absolute;left:${FIN_X+(FW-trophyW)/2}px;top:${CFY+CH/2-trophyH/2-8}px;width:${trophyW}px;height:${trophyH}px;object-fit:contain;opacity:0.09;pointer-events:none;z-index:5;filter:drop-shadow(0 0 18px rgba(245,196,0,0.25));`;
+  add(lobImg);
+
   // FINALS / CHAMPION
   const finCenterY=CFY+CH/2;
   if(BD.champion){
@@ -1239,6 +1248,9 @@ function refreshSeriesUI(m){
   if(ffBotBtn){ffBotBtn.disabled=!ready;ffBotBtn.textContent=`${m.botTeam||'Bottom team'} forfeits`;}
   const advBtn=document.getElementById('advance-btn');
   advBtn.disabled=!m.winner;
+  // Show unadvance button if this matchup's winner was already pushed downstream
+  const unadvBtn=document.getElementById('unadvance-btn');
+  if(unadvBtn)unadvBtn.style.display=isAdvanced(m)?'block':'none';
   const ffTag=m.forfeit?' (FF)':'';
   advBtn.textContent=m.type==='finals'&&m.winner?`Crown ${m.winner} Champion 🏆`:m.winner?`Advance ${m.winner}${ffTag} →`:'Advance Winner →';
 }
@@ -1336,6 +1348,7 @@ document.getElementById('sc-bot-plus').addEventListener('click',()=>bumpScore('b
 document.getElementById('sc-bot-minus').addEventListener('click',()=>bumpScore('bot',-1));
 document.getElementById('ff-top-btn').addEventListener('click',()=>forfeitSeries('top'));
 document.getElementById('ff-bot-btn').addEventListener('click',()=>forfeitSeries('bot'));
+document.getElementById('unadvance-btn').addEventListener('click',unadvanceWinner);
 
 document.getElementById('e-series').addEventListener('change',async()=>{
   if(selId===null)return;
@@ -1345,7 +1358,67 @@ document.getElementById('e-series').addEventListener('change',async()=>{
   try{await save();render();}catch(e){UNDO_STACK.pop();refreshUndoBtn();showMsg('series-msg','Save failed: '+e.message,'error');}
 });
 
-// ── Advance winner into the next round (or crown champion if Finals) ──
+// ── Check if this matchup's winner has already been placed in the next slot ──
+function isAdvanced(m){
+  if(!m||!m.winner)return false;
+  if(m.type==='pi-a'){
+    const target=gR(m.conf,0)[3];
+    return target&&target.botTeam===m.winner;
+  }else if(m.type==='pi-b'){
+    const pc=gPI(m.conf,'pi-c');
+    return pc&&(pc.topTeam===m.winner||pc.botTeam===m.winner);
+  }else if(m.type==='pi-c'){
+    const target=gR(m.conf,0)[0];
+    return target&&target.botTeam===m.winner;
+  }else if(m.type==='main'){
+    const next=computeNextSlot(m);
+    if(!next||!next.target)return false;
+    return next.slot==='top'?next.target.topTeam===m.winner:next.target.botTeam===m.winner;
+  }else if(m.type==='finals'){
+    return BD.champion===m.winner;
+  }
+  return false;
+}
+
+async function unadvanceWinner(){
+  if(selId===null)return;
+  const m=gM(selId);if(!m||!m.winner)return;
+  if(!confirm('Remove '+m.winner+' from the next round slot? The downstream slot will be cleared.'))return;
+  pushUndo();
+  if(m.type==='pi-a'){
+    const target=gR(m.conf,0)[3];
+    if(target){target.botTeam='';target.botSeed='';target.winner='';target.topScore='';target.botScore='';target.status='';target.seriesTxt='';}
+    const pc=gPI(m.conf,'pi-c');
+    const loser=m.winner===m.topTeam?m.botTeam:m.topTeam;
+    if(pc&&pc.topTeam===loser){pc.topTeam='';pc.topSeed='';}
+  }else if(m.type==='pi-b'){
+    const pc=gPI(m.conf,'pi-c');
+    const loser=m.winner===m.topTeam?m.botTeam:m.topTeam;
+    if(pc&&pc.botTeam===m.winner){pc.botTeam='';pc.botSeed='';}
+    if(pc&&pc.topTeam===loser){pc.topTeam='';pc.topSeed='';}
+  }else if(m.type==='pi-c'){
+    const target=gR(m.conf,0)[0];
+    if(target){target.botTeam='';target.botSeed='';target.winner='';target.topScore='';target.botScore='';target.status='';target.seriesTxt='';}
+  }else if(m.type==='main'){
+    const next=computeNextSlot(m);
+    if(next&&next.target){
+      if(next.slot==='top'){next.target.topTeam='';next.target.topSeed='';}
+      else{next.target.botTeam='';next.target.botSeed='';}
+      next.target.winner='';next.target.topScore='';next.target.botScore='';next.target.status='';next.target.seriesTxt='';
+    }
+  }else if(m.type==='finals'){
+    BD.champion='';BD.championSeries='';
+  }
+  try{
+    await save();render();buildPicker(document.getElementById('mp-search').value);fillForm(m.id);
+    showMsg('advance-msg','Unadvanced — slot cleared.','success');
+    toast('Removed '+m.winner+' from next round','amber',3500);
+  }catch(e){
+    UNDO_STACK.pop();refreshUndoBtn();
+    showMsg('advance-msg','Unadvance failed: '+e.message,'error');
+  }
+}
+
 function computeNextSlot(m){
   if(m.type==='main'){
     const round=Math.floor(m.pos/10), idx=m.pos%10;
