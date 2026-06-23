@@ -797,6 +797,20 @@ function piCard(m,x,y,label,note=''){
 }
 
 function drawLines(svg){
+  // Larry O'Brien Trophy — rendered first so it sits behind all lines and cards
+  const trophyW=100, trophyH=170;
+  const trophyX=FIN_X+(FW-trophyW)/2;
+  const trophyY=CFY+CH/2-trophyH/2;
+  const trophyEl=document.createElementNS('http://www.w3.org/2000/svg','image');
+  trophyEl.setAttribute('href','https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Larry_O%27Brien_Championship_Trophy_icon.svg/1280px-Larry_O%27Brien_Championship_Trophy_icon.svg.png');
+  trophyEl.setAttribute('x',trophyX);
+  trophyEl.setAttribute('y',trophyY);
+  trophyEl.setAttribute('width',trophyW);
+  trophyEl.setAttribute('height',trophyH);
+  trophyEl.setAttribute('opacity','0.13');
+  trophyEl.style.filter='drop-shadow(0 0 14px rgba(245,196,0,0.4))';
+  svg.appendChild(trophyEl);
+
   const lineC='rgba(255,255,255,0.14)';
   const goldC='rgba(245,196,0,0.4)';
   const piC='rgba(138,138,168,0.35)';
@@ -899,13 +913,7 @@ function renderDesktop(){
   gR('west',1).forEach((m,i)=>add(cardEl(m,R2_W_X,R2Y[i])));
   gR('west',2).forEach(m=>add(cardEl(m,CF_W_X,CFY)));
 
-  // LARRY O'BRIEN TROPHY (behind finals)
-  const lobImg=document.createElement('img');
-  lobImg.src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Larry_O%27Brien_Championship_Trophy_icon.svg/1280px-Larry_O%27Brien_Championship_Trophy_icon.svg.png';
-  lobImg.alt='Larry O\'Brien Trophy';
-  const trophyW=110, trophyH=180;
-  lobImg.style.cssText=`position:absolute;left:${FIN_X+(FW-trophyW)/2}px;top:${CFY+CH/2-trophyH/2-8}px;width:${trophyW}px;height:${trophyH}px;object-fit:contain;opacity:0.09;pointer-events:none;z-index:5;filter:drop-shadow(0 0 18px rgba(245,196,0,0.25));`;
-  add(lobImg);
+
 
   // FINALS / CHAMPION
   const finCenterY=CFY+CH/2;
